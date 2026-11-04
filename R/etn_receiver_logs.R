@@ -10,6 +10,8 @@
 #'   name, manufacturer information, deployment ID and all columns from
 #'   `acoustic.receiver_logs`.
 #'
+#' @importFrom rlang .data
+#'
 #' @examples
 #' \dontrun{
 #' raw_logs <- get_raw_receiver_logs(
@@ -125,27 +127,21 @@ decode_receiver_json <- function(x) {
 #' @return A data frame with decoded JSON fields expanded into columns.
 #'
 #' @keywords internal
+
 parse_thelma <- function(logs) {
 
-  logs %>%
-
-    # Retain only valid receiver log records
-    dplyr::filter(data_is_valid == TRUE) %>%
-
-    # Decode JSON data into a list-column
+  logs |>
+    dplyr::filter(.data$data_is_valid == TRUE) |>
     dplyr::mutate(
-      parsed_data = decode_receiver_json(data)
-    ) %>%
-
-    # Remove original JSON column
-    dplyr::select(-data) %>%
-
-    # Expand JSON fields into individual columns
+      parsed_data = decode_receiver_json(.data$data)
+    ) |>
+    dplyr::select(-"data") |>
     tidyr::unnest_wider(
-      parsed_data,
+      "parsed_data",
       names_repair = "unique"
     )
 }
+
 
 
 #' Parse Innovasea receiver logs
@@ -162,23 +158,22 @@ parse_thelma <- function(logs) {
 #'   additional column per record type.
 #'
 #' @keywords internal
+
 parse_innovasea <- function(logs) {
 
   # Retain valid records and decode JSON data
-  logs <- logs %>%
-    dplyr::filter(data_is_valid == TRUE) %>%
+  logs <- logs |>
+    dplyr::filter(.data$data_is_valid == TRUE) |>
     dplyr::mutate(
-      parsed_data = decode_receiver_json(data)
+      parsed_data = decode_receiver_json(.data$data)
     )
 
-  # Identify all unique record types in the dataset
+  # Identify all unique record types
   record_types <- unique(logs$record_type)
 
   # Create one column per record type
   for (rt in record_types) {
 
-    # Extract the value from JSON key "6" for records
-    # matching the current record type
     logs[[rt]] <- purrr::map_chr(
       seq_len(nrow(logs)),
       function(i) {
@@ -194,17 +189,15 @@ parse_innovasea <- function(logs) {
           }
 
         } else {
-
-          # Leave other record types as missing
           NA_character_
         }
       }
     )
   }
 
-  # Remove the original JSON data and temporary parsed column
-  logs %>%
-    dplyr::select(-data, -parsed_data)
+  # Remove original JSON data and temporary parsed column
+  logs |>
+    dplyr::select(-"data", -"parsed_data")
 }
 
 

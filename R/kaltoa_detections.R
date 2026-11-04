@@ -9,7 +9,6 @@
 #' @returns a 'DetectionsList' object to be further used in the kaltoa package
 #' @export
 #'
-#' @examples
 build_kaltoa_detections_list <- function(deployments,
                                          detections,
                                          utm_epsg = 32631,   # UTM 31N, Belgian North Sea

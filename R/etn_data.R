@@ -8,9 +8,8 @@
 #' @returns obj in the global environment, and saved obj in the specified path
 #' @export
 #'
-#' @examples
 etn_get_or_download <- function(name, expr, folder,
-                            refresh = refresh_etn) {
+                            refresh = TRUE) {
 
   file <- file.path(folder, paste0(name, ".rds"))
 

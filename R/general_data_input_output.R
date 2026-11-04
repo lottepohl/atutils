@@ -6,7 +6,6 @@
 #' @returns saved .rds obj
 #' @export
 #'
-#' @examples
 save_data <- function(data, folder){
   base::saveRDS(data, file = paste0(folder, "/" , deparse(substitute(data)), ".rds"))
 }
@@ -19,7 +18,6 @@ save_data <- function(data, folder){
 #' @returns an obj in the global environment
 #' @export
 #'
-#' @examples
 load_data <- function(filestring, folder){
   data <- base::readRDS(file = paste0(folder, "/", filestring, ".rds"))
   return(data)

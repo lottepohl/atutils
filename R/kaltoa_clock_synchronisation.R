@@ -1,15 +1,14 @@
 #' Automatically get the optimal receiver synchronisation order
 #'
-#' @param sync_conn
-#' @param n
-#' @param min_detections
-#' @param exclude
-#' @param max_exhaustive
+#' @param sync_conn synchronisation model obj
+#' @param n number of acoustic receivers to be control receivers
+#' @param min_detections min sync-tag detections for a usable link
+#' @param exclude receivers to leave out entirely
+#' @param max_exhaustive number of cross detections
 #'
-#' @returns list
+#' @returns df of control and target receivers to be further used in kaltoa workflow
 #' @export
 #'
-#' @examples
 auto_kaltoa_sync_order <- function(sync_conn,
                             n = 1,                 # number of control receivers
                             min_detections = 1000, # min sync-tag detections for a usable link

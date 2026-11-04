@@ -10,22 +10,22 @@ Description: Reusable functions for retrieving, processing and analysing
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
 Imports: 
     DBI,
     dplyr,
-    forcats,
-    ggplot2,
     glue,
-    here,
+    etn,
+    kaltoa,
+    rlang,
     jsonlite,
-    knitr,
-    lubridate,
     purrr,
     readr,
     readxl,
-    RPostgreSQL,
     sf,
     stats,
-    stringr,
+    tibble,
     tidyr
+Config/roxygen2/version: 8.1.1
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3

@@ -3,10 +3,9 @@
 #' @param label readable description, e.g. "NRT_setup1_thelma_test_ctrl2"
 #' @param settings named list with all settings that influence the result, e.g. settings, date, kaltoa version, git commit of the code, R session info.
 #'
-#' @returns
+#' @returns a run id to be used in the folder name for each run
 #' @export
 #'
-#' @examples
 make_run_id <- function(label, settings) {
   paste0(label, "_", substr(rlang::hash(settings), 1, 6))
 }
@@ -17,10 +16,9 @@ make_run_id <- function(label, settings) {
 #' @param folder run folder, e.g. file.path(path_positioning, run_id)
 #' @param note optional free text, e.g. why this run was made
 #'
-#' @returns
+#' @returns folder with unique run info
 #' @export
 #'
-#' @examples
 write_run_info <- function(settings, folder, note = NULL) {
 
   dir.create(folder, recursive = TRUE, showWarnings = FALSE)

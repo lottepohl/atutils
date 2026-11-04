@@ -1,13 +1,17 @@
-#' Read all files with specific file extension into global environment
+#' Read files with specific extensions into the global environment
 #'
-#' @param path directory of files that should be loaded.
-#' @param file_ext File extension. Currently supported: gpkg, csv, tsv, xlsx, xls, json, rds
-#' @param subdir boolean. TRUE if to include all child directories from path.
+#' Reads supported file types from a directory and assigns each file
+#' to the global environment using its filename (without extension).
 #'
-#' @returns files loaded into the global environment, with the name == filename
+#' @param path Directory containing the files to load.
+#' @param file_ext File extension(s). Supported: gpkg, csv, tsv, xlsx,
+#'   xls, json, rds.
+#' @param subdir Logical. If TRUE, include files in child directories.
+#'
+#' @returns Invisibly returns the names of the objects loaded into
+#'   the global environment. Returns NULL if no matching files are found.
+#'
 #' @export
-#'
-#' @examples
 load_files_to_env <- function(path, file_ext, subdir = FALSE) {
 
   # Remove leading dots if provided
