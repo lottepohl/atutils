@@ -6,7 +6,7 @@
 #' @param tz time zone, e.g. "UTC"
 #' @param default_depth " depth of the acoustic receivers
 #'
-#' @returns
+#' @returns a 'DetectionsList' object to be further used in the kaltoa package
 #' @export
 #'
 #' @examples

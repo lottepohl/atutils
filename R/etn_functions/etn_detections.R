@@ -4,11 +4,11 @@
 #' @param output_file file to store detections in
 #' @param save_interval after how many tag_serial_numbers the output_file should be overwritten
 #'
-#' @returns
+#' @returns detections df from the etn database
 #' @export
 #'
 #' @examples
-etn_det_per_tag <- function(animals, output_file = file.path(path_data_raw_etn, "detections_progress.rds"), save_interval = 5) {
+etn_det_per_tag <- function(animals, output_file, save_interval = 5) {
 
   # Resume if exists
   if(file.exists(output_file)) {
@@ -78,12 +78,12 @@ etn_det_per_tag <- function(animals, output_file = file.path(path_data_raw_etn, 
 #' @param output_file filename where detections should be saved
 #' @param save_interval after how many stations the output file should be overwritten
 #'
-#' @returns
+#' @returns detections df from the etn database
 #' @export
 #'
 #' @examples
 etn_det_per_station <- function(stations, animals = NULL, scientific_name = NULL,
-                                output_file = file.path(path_data_raw_etn, "detections_progress.rds"),
+                                output_file = NULL,
                                 save_interval = 5) {
 
   # Build a unique identifier for resume tracking

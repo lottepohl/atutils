@@ -14,7 +14,18 @@ RoxygenNote: 7.3.2
 Imports: 
     DBI,
     dplyr,
+    forcats,
+    ggplot2,
     glue,
+    here,
     jsonlite,
+    knitr,
+    lubridate,
     purrr,
-    sf
+    readr,
+    readxl,
+    RPostgreSQL,
+    sf,
+    stats,
+    stringr,
+    tidyr

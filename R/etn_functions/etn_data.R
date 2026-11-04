@@ -5,11 +5,11 @@
 #' @param folder folder where the file is saved or will be saved
 #' @param refresh boolean. if refresh = T, then data will be downloaded
 #'
-#' @returns
+#' @returns obj in the global environment, and saved obj in the specified path
 #' @export
 #'
 #' @examples
-etn_get_or_download <- function(name, expr, folder = path_data_raw_etn,
+etn_get_or_download <- function(name, expr, folder,
                             refresh = refresh_etn) {
 
   file <- file.path(folder, paste0(name, ".rds"))
