@@ -6,7 +6,7 @@
 #' @param exclude
 #' @param max_exhaustive
 #'
-#' @returns
+#' @returns list
 #' @export
 #'
 #' @examples
