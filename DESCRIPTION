@@ -1,6 +1,6 @@
 Package: atutils
 Title: Utilities for Acoustic Telemetry Data Processing
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: 
     person("Lotte", "Pohl", email = "lotte.pohl@ugent.be",
            role = c("aut", "cre"))
