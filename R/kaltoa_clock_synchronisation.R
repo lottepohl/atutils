@@ -8,8 +8,7 @@
 #'
 #' @returns df of control and target receivers to be further used in kaltoa workflow
 #' @export
-#'
-auto_kaltoa_sync_order <- function(sync_conn,
+kaltoa_auto_sync_order <- function(sync_conn,
                             n = 1,                 # number of control receivers
                             min_detections = 1000, # min sync-tag detections for a usable link
                             exclude = NULL,        # receivers to leave out entirely

@@ -5,7 +5,6 @@
 #'
 #' @returns saved .rds obj
 #' @export
-#'
 save_data <- function(data, folder){
   base::saveRDS(data, file = paste0(folder, "/" , deparse(substitute(data)), ".rds"))
 }

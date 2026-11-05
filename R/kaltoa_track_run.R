@@ -5,8 +5,7 @@
 #'
 #' @returns a run id to be used in the folder name for each run
 #' @export
-#'
-make_run_id <- function(label, settings) {
+kaltoa_make_run_id <- function(label, settings) {
   paste0(label, "_", substr(rlang::hash(settings), 1, 6))
 }
 
@@ -18,8 +17,7 @@ make_run_id <- function(label, settings) {
 #'
 #' @returns folder with unique run info
 #' @export
-#'
-write_run_info <- function(settings, folder, note = NULL) {
+kaltoa_write_run_info <- function(settings, folder, note = NULL) {
 
   dir.create(folder, recursive = TRUE, showWarnings = FALSE)
 
