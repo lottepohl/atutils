@@ -5,12 +5,14 @@
 #' Save plot() or ggplot() objects as pdf or png
 #' The filename will be the R obj name
 #' @param plot plot() or ggplot() obj
+#' @param name optional filename (without file extension)
 #' @param folder target dir
 #' @param file_ext "pdf" or "png"
 #' @param height plot height
 #' @param width plot width
 #' @param units inuts, e.g 'cm'
-#' @param ...
+#' @param res resolution, in dpi
+#' @param ... additional parameters for ggplot
 #'
 #' @returns a saved plot in the target directory
 #' @export
@@ -19,11 +21,15 @@ save_plot <- function(plot, folder,
                       file_ext = "pdf",
                       height = 15, width = 18,
                       units = "cm",
+                      res = 300,
                       ...) {
 
   plot_expr <- substitute(plot)
+  plot_env  <- parent.frame()
 
-  # Use the supplied name, or derive one from the expression
+  file_ext <- tolower(file_ext)
+
+  # Determine filename
   if (is.null(name)) {
     name <- if (is.call(plot_expr)) {
       deparse(plot_expr[[2]])
@@ -34,38 +40,49 @@ save_plot <- function(plot, folder,
 
   filename <- file.path(folder, paste0(name, ".", file_ext))
 
-  # Direct base R plot() call
-  if (is.call(plot_expr) && identical(plot_expr[[1]], quote(plot))) {
+  # Create folder if necessary
+  dir.create(folder, recursive = TRUE, showWarnings = FALSE)
+
+  # Open graphics device
+  if (file_ext == "pdf") {
 
     grDevices::pdf(
       file = filename,
-      height = height / if (units == "cm") 2.54 else 1,
-      width = width / if (units == "cm") 2.54 else 1
+      width = if (units == "cm") width / 2.54 else width,
+      height = if (units == "cm") height / 2.54 else height,
+      ...
     )
 
-    tryCatch(
-      eval(plot_expr, envir = parent.frame()),
-      finally = grDevices::dev.off()
+  } else if (file_ext == "png") {
+
+    grDevices::png(
+      filename = filename,
+      width = width,
+      height = height,
+      units = units,
+      res = res,
+      ...
     )
 
   } else {
+    stop("Unsupported file extension: ", file_ext)
+  }
 
-    # ggplot object
-    plot_obj <- eval(plot_expr, envir = parent.frame())
+  # Evaluate and draw plot
+  tryCatch({
 
-    if (!inherits(plot_obj, "ggplot")) {
-      stop("Input must be a ggplot object or a direct plot() call.")
+    result <- eval(plot_expr, envir = plot_env)
+
+    # Explicitly print ggplot and trellis objects
+    if (inherits(result, c("ggplot", "trellis"))) {
+      print(result)
     }
 
-    ggplot2::ggsave(
-      filename = filename,
-      plot = plot_obj,
-      height = height,
-      width = width,
-      units = units,
-      ...
-    )
-  }
+  }, finally = {
+    grDevices::dev.off()
+  })
+
+  message("Plot saved: ", filename)
 
   invisible(filename)
 }
