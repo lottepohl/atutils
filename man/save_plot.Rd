@@ -2,14 +2,12 @@
 % Please edit documentation in R/general_plotting.R
 \name{save_plot}
 \alias{save_plot}
-\title{Save plot() or ggplot() objects as pdf or png
-The filename will be the R obj name}
+\title{Save plot() or ggplot() objects as PDF and PNG}
 \usage{
 save_plot(
   plot,
   folder,
   name = NULL,
-  file_ext = "pdf",
   height = 15,
   width = 18,
   units = "cm",
@@ -18,28 +16,27 @@ save_plot(
 )
 }
 \arguments{
-\item{plot}{plot() or ggplot() obj}
+\item{plot}{plot() or ggplot() object}
 
-\item{folder}{target dir}
+\item{folder}{target directory}
 
 \item{name}{optional filename (without file extension)}
-
-\item{file_ext}{"pdf" or "png"}
 
 \item{height}{plot height}
 
 \item{width}{plot width}
 
-\item{units}{inuts, e.g 'cm'}
+\item{units}{units for dimensions, e.g. "cm" or "in"}
 
-\item{res}{resolution, in dpi}
+\item{res}{resolution for PNG output, in dpi}
 
-\item{...}{additional parameters for ggplot}
+\item{...}{additional arguments passed to the graphics devices}
 }
 \value{
-a saved plot in the target directory
+Invisibly returns a named character vector containing the paths
+to the saved PDF and PNG files.
 }
 \description{
-Save plot() or ggplot() objects as pdf or png
-The filename will be the R obj name
+Saves a plot in both PDF and PNG formats using the same filename.
+By default, the filename is derived from the supplied R object name.
 }

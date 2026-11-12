@@ -119,3 +119,29 @@ kaltoa_auto_sync_order <- function(sync_conn,
   attr(sync_order, "unconnected") <- unconnected
   sync_order
 }
+
+#
+# It’s a sensible method, but treat it as a good starting heuristic, not a proven optimum.
+#
+# Why it’s reasonable
+#
+# It uses the quantity that limits synchronisation, which is how many sync-tag detections link two receivers.
+# Counting only the weaker direction of each pair avoids picking links that look strong but only work one way.
+# For n of 1 to 3 it checks every combination, so within its own scoring it does find the best set.
+# It flags weak links and receivers it can’t connect.
+#
+# Where it can mislead you
+#
+# Total counts hide gaps. The drift is estimated per hourly window, so a pair with 100,000 detections concentrated in a few weeks is worse than one with fewer detections spread evenly. The function doesn’t look at coverage over time.
+# It ignores timing quality. It doesn’t check whether the detections have milliseconds. You saw partial ms coverage at NRT-05, NRT-07 and NRT-10, and a controller with weak ms data hurts every target linked to it.
+# It ignores geometry. Distance and reflection-prone paths aren’t considered, though they affect how clean the latencies are.
+# Targets use one controller only. Each target is tied to its single best controller, even if a second link would help.
+# Scores aren’t comparable across n. You can’t pick n by score, so your approach of reading the weakest link in attr(, "links") is the right one.
+#
+# How to check it for your data
+#
+# For the chosen pairs, count sync detections per hour and check there are no long gaps (your earlier median was 34 per hour).
+# Compare sync_order_2 and sync_order_3 after the full workflow. The one with the flatter latency and smaller error plot wins, whatever the function scored.
+# Look at which receivers end up with large offsets or error. NRT-10 and NRT-15 (about +12.9 ms) are the ones to look at first.
+#
+# If you want, I can add an hourly-coverage check, and an option to leave out receivers with poor ms coverage, to kaltoa_auto_sync_order().

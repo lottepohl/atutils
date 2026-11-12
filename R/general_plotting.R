@@ -1,35 +1,33 @@
-# save_plot <- function(plot, folder, file_ext = "pdf", height = 15, width = 18, units = "cm"){
-#   ggplot2::ggsave(filename = paste0(folder, "/", deparse(substitute(plot)),".", file_ext),
-#                   height = height, width = width, units = units)
-# }
-#' Save plot() or ggplot() objects as pdf or png
-#' The filename will be the R obj name
-#' @param plot plot() or ggplot() obj
+#' Save plot() or ggplot() objects as PDF and PNG
+#'
+#' Saves a plot in both PDF and PNG formats using the same filename.
+#' By default, the filename is derived from the supplied R object name.
+#'
+#' @param plot plot() or ggplot() object
+#' @param folder target directory
 #' @param name optional filename (without file extension)
-#' @param folder target dir
-#' @param file_ext "pdf" or "png"
 #' @param height plot height
 #' @param width plot width
-#' @param units inuts, e.g 'cm'
-#' @param res resolution, in dpi
-#' @param ... additional parameters for ggplot
+#' @param units units for dimensions, e.g. "cm" or "in"
+#' @param res resolution for PNG output, in dpi
+#' @param ... additional arguments passed to the graphics devices
 #'
-#' @returns a saved plot in the target directory
+#' @returns Invisibly returns a named character vector containing the paths
+#'   to the saved PDF and PNG files.
 #' @export
 save_plot <- function(plot, folder,
                       name = NULL,
-                      file_ext = "pdf",
-                      height = 15, width = 18,
+                      height = 15,
+                      width = 18,
                       units = "cm",
                       res = 300,
                       ...) {
 
   plot_expr <- substitute(plot)
-  plot_env  <- parent.frame()
+  plot_env <- parent.frame()
 
-  file_ext <- tolower(file_ext)
+  # Determine filename -----------------------------------------------------
 
-  # Determine filename
   if (is.null(name)) {
     name <- if (is.call(plot_expr)) {
       deparse(plot_expr[[2]])
@@ -38,51 +36,67 @@ save_plot <- function(plot, folder,
     }
   }
 
-  filename <- file.path(folder, paste0(name, ".", file_ext))
+  # Create folder if necessary --------------------------------------------
 
-  # Create folder if necessary
   dir.create(folder, recursive = TRUE, showWarnings = FALSE)
 
-  # Open graphics device
-  if (file_ext == "pdf") {
+  # Evaluate plot ----------------------------------------------------------
 
-    grDevices::pdf(
-      file = filename,
-      width = if (units == "cm") width / 2.54 else width,
-      height = if (units == "cm") height / 2.54 else height,
-      ...
-    )
+  result <- eval(plot_expr, envir = plot_env)
 
-  } else if (file_ext == "png") {
+  # Draw plot on a graphics device ----------------------------------------
 
-    grDevices::png(
-      filename = filename,
-      width = width,
-      height = height,
-      units = units,
-      res = res,
-      ...
-    )
+  draw_plot <- function(device, filename) {
 
-  } else {
-    stop("Unsupported file extension: ", file_ext)
-  }
+    if (device == "pdf") {
 
-  # Evaluate and draw plot
-  tryCatch({
+      grDevices::pdf(
+        file = filename,
+        width = if (units == "cm") width / 2.54 else width,
+        height = if (units == "cm") height / 2.54 else height,
+        ...
+      )
 
-    result <- eval(plot_expr, envir = plot_env)
+    } else if (device == "png") {
 
-    # Explicitly print ggplot and trellis objects
-    if (inherits(result, c("ggplot", "trellis"))) {
-      print(result)
+      grDevices::png(
+        filename = filename,
+        width = width,
+        height = height,
+        units = units,
+        res = res,
+        ...
+      )
     }
 
-  }, finally = {
-    grDevices::dev.off()
-  })
+    tryCatch({
 
-  message("Plot saved: ", filename)
+      if (inherits(result, c("ggplot", "trellis"))) {
+        print(result)
+      } else {
+        # Base R plots are drawn when the expression is evaluated.
+        # Re-evaluate the expression to draw them on this device.
+        eval(plot_expr, envir = plot_env)
+      }
 
-  invisible(filename)
+    }, finally = {
+      grDevices::dev.off()
+    })
+  }
+
+  # Save both formats ------------------------------------------------------
+
+  pdf_file <- file.path(folder, paste0(name, ".pdf"))
+  png_file <- file.path(folder, paste0(name, ".png"))
+
+  draw_plot("pdf", pdf_file)
+  draw_plot("png", png_file)
+
+  message(
+    "Plots saved:\n",
+    "  PDF: ", pdf_file, "\n",
+    "  PNG: ", png_file
+  )
+
+  invisible(c(pdf = pdf_file, png = png_file))
 }
