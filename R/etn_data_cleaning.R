@@ -12,6 +12,7 @@
 #' @param df      data frame / tibble (e.g. the animal table)
 #' @param exclude character columns to leave untouched (free text where commas
 #'                are legitimate, e.g. "comments")
+#' @export
 etn_remove_double_cols <- function(df, exclude = "comments") {
 
   # 1) rename alternative tag id

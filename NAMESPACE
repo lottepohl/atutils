@@ -3,6 +3,7 @@
 export(etn_det_per_station)
 export(etn_det_per_tag)
 export(etn_get_or_download)
+export(etn_remove_double_cols)
 export(get_raw_receiver_logs)
 export(get_receiver_logs)
 export(kaltoa_auto_sync_order)
