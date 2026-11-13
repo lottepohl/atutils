@@ -26,9 +26,7 @@ etn_get_or_download <- function(name, expr, folder,
   # 3. save it. save_data() names the file after the object it receives, so the
   #    object is first created under its real name in the calling environment.
   dir.create(folder, recursive = TRUE, showWarnings = FALSE)
-  env <- parent.frame()
-  assign(name, obj, envir = env)
-  eval(bquote(save_data(.(as.name(name)), folder = .(folder))), envir = env)
+  save_data(obj, folder = folder, name = name)
 
   obj
 }

@@ -2,11 +2,15 @@
 #'
 #' @param data R obj, its name is the filename in the saved .rds obj
 #' @param folder directory to save the .rds file to
+#' @param name filename for obj to be saved as
 #'
 #' @returns saved .rds obj
 #' @export
-save_data <- function(data, folder){
-  base::saveRDS(data, file = paste0(folder, "/" , deparse(substitute(data)), ".rds"))
+save_data <- function(data, folder, name = deparse(substitute(data))) {
+  base::saveRDS(
+    data,
+    file = file.path(folder, paste0(name, ".rds"))
+  )
 }
 
 #' Read .rds obj into R global environment

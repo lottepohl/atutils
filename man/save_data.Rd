@@ -4,12 +4,14 @@
 \alias{save_data}
 \title{Save obj as .rds data}
 \usage{
-save_data(data, folder)
+save_data(data, folder, name = deparse(substitute(data)))
 }
 \arguments{
 \item{data}{R obj, its name is the filename in the saved .rds obj}
 
 \item{folder}{directory to save the .rds file to}
+
+\item{name}{filename for obj to be saved as}
 }
 \value{
 saved .rds obj
