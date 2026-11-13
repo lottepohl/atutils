@@ -2,16 +2,27 @@
 % Please edit documentation in R/etn_data_cleaning.R
 \name{etn_remove_double_cols}
 \alias{etn_remove_double_cols}
-\title{Keep first entry of comma-separated cell entries of etn animals df}
+\title{Clean comma-separated duplicate values in character columns}
 \usage{
-etn_remove_double_cols(animals)
+etn_remove_double_cols(df, exclude = "comments")
 }
 \arguments{
-\item{animals}{animals df from etn database}
-}
-\value{
-df with first entry of columns tag_serial_number, tag_type, tag_subtype, acoustic_tag_id
+\item{df}{data frame / tibble (e.g. the animal table)}
+
+\item{exclude}{character columns to leave untouched (free text where commas
+are legitimate, e.g. "comments")}
 }
 \description{
-Keep first entry of comma-separated cell entries of etn animals df
+\enumerate{
+\item Renames \code{acoustic_tag_id_alternative} to \code{acoustic_tag_id_2}.
+\item For every character column containing a comma, splits the value on ",",
+trims whitespace, drops empty parts and removes duplicates within the cell.
+\itemize{
+\item one unique value left  -> the cell keeps just that value
+("090Z,090Z" -> "090Z", "A69-1303-1966," -> "A69-1303-1966", "," -> NA)
+\item several unique values  -> the first stays in the original column, the
+others go into new columns with the next free counter
+(acoustic_tag_id, acoustic_tag_id_2 exist -> acoustic_tag_id_3)
+}
+}
 }
